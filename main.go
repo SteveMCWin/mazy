@@ -3,7 +3,10 @@ package main
 import (
 	"fmt"
 	"math/rand"
+	"os"
+	"os/exec"
 	"strings"
+	"time"
 )
 
 const wall = rune('█')
@@ -32,11 +35,18 @@ func main() {
 
 	// fmt.Print(MazeStr(maze))
 
-	maze.MakeMazeRDFS()
 	maze.MakeMazeStartEnd()
+	steps := maze.MakeMazeRDFS()
 
 	fmt.Println()
-	fmt.Print(maze.String())
+	for i := range steps {
+		cmd := exec.Command("clear")
+		cmd.Stdout = os.Stdout
+		cmd.Run()
+		fmt.Print(steps[i])
+		time.Sleep(30*time.Millisecond)
+	}
+	// fmt.Print(maze.String())
 	fmt.Println()
 
 }
@@ -71,30 +81,38 @@ func (m *Maze) MakeMazeStartEnd(coords ...MazeCoords) {
 	m.Cells[finish.Y][finish.X].Sprite = empty
 }
 
-func (m *Maze) MakeMazeRDFS() {
+func (m *Maze) MakeMazeRDFS() []string {
+
 	if len(m.Cells) == 0 {
 		fmt.Println("Maze has no rows ig")
 		m.InitMazeBase(25, 15)
 	}
 
-	st := []MazeCoords{}
+	steps := []string{ m.String() }
+
+	stack := []MazeCoords{}
 
 	m.Cells[1][1].Visited = true
-	st = append(st, MazeCoords{1, 1})
+	stack = append(stack, MazeCoords{1, 1})
 
-	for len(st) > 0 {
-		curr := st[len(st)-1]
-		st = st[:len(st)-1]
+	for len(stack) > 0 {
+		curr := stack[len(stack)-1]
+		stack = stack[:len(stack)-1]
 		unvisitedNeighbours := getUnvisitedNeighbours(curr, m)
 		if len(unvisitedNeighbours) > 0 {
-			st = append(st, curr)
+			stack = append(stack, curr)
 			next := unvisitedNeighbours[rand.Int()%len(unvisitedNeighbours)]
 			wallCoords := MazeCoords{X: (curr.X + next.X) / 2, Y: (curr.Y + next.Y) / 2}
 			m.Cells[wallCoords.Y][wallCoords.X].Sprite = empty
 			m.Cells[next.Y][next.X].Visited = true
-			st = append(st, next)
+			stack = append(stack, next)
+
+			steps = append(steps, m.String())
 		}
 	}
+
+	fmt.Println("len(steps): ", len(steps))
+	return steps
 }
 
 func getUnvisitedNeighbours(curr MazeCoords, maze *Maze) []MazeCoords {
