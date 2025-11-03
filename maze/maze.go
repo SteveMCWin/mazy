@@ -53,7 +53,7 @@ func (m *Maze) InitMazeBase(x, y int) {
 		}
 	}
 
-	m.Steps = append(m.Steps, m.String())
+	m.Steps = []string{m.String()}
 }
 
 func (m *Maze) MakeMazeStartEnd(coords ...MazeCoords) {

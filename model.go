@@ -96,8 +96,13 @@ func (m Model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 			// if !m.isTyping {
 			// 	m.currTab = TabIndex((len(m.tabs) + int(m.currTab) - 1) % len(m.tabs))
 			// }
-		case "ctrl+r": // THERE IS A BUG when the program starts a new maze is made, but then another is made when pressing ctrl+r and then they both get displayed, but after that no new ones are made
+		case "ctrl+r":
+			m.maze.CurrFrame = 0
+			m.maze.AnimationPaused = false
 			genNewMaze(&m)
+			cmds = append(cmds, AnimateSignal(m))
+		case " ": 
+			m.maze.AnimationPaused = !m.maze.AnimationPaused
 			cmds = append(cmds, AnimateSignal(m))
 		case "ctrl+up":
 			// cmds = append(cmds, ChangeFontSize(&m.terminal, 1, true))
@@ -123,6 +128,7 @@ func (m Model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 		m.windowWidth = msg.Width
 		m.windowHeight = msg.Height
 		genNewMaze(&m)
+		m.maze.AnimationPaused = true
 	case Animate:
 		if bool(msg) == true {
 			if m.maze.CurrFrame < len(m.maze.Steps)-1 {
