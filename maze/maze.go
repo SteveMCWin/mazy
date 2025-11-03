@@ -23,6 +23,9 @@ type Cell struct {
 
 type Maze struct {
 	Cells [][]Cell
+	Steps []string
+	CurrFrame int
+	AnimationPaused bool
 }
 
 func (m *Maze) InitMazeBase(x, y int) {
@@ -49,6 +52,8 @@ func (m *Maze) InitMazeBase(x, y int) {
 			}
 		}
 	}
+
+	m.Steps = append(m.Steps, m.String())
 }
 
 func (m *Maze) MakeMazeStartEnd(coords ...MazeCoords) {
@@ -63,16 +68,16 @@ func (m *Maze) MakeMazeStartEnd(coords ...MazeCoords) {
 
 	m.Cells[begin.Y][begin.X].Sprite = empty
 	m.Cells[finish.Y][finish.X].Sprite = empty
+
+	m.Steps = append(m.Steps, m.String())
 }
 
-func (m *Maze) MakeMazeRDFS() []string {
+func (m *Maze) MakeMazeRDFS() {
 
 	if len(m.Cells) == 0 {
 		fmt.Println("Maze has no rows ig")
 		m.InitMazeBase(25, 15)
 	}
-
-	steps := []string{m.String()}
 
 	stack := []MazeCoords{}
 
@@ -97,12 +102,11 @@ func (m *Maze) MakeMazeRDFS() []string {
 			m.Cells[next.Y][next.X].Visited = true
 			stack = append(stack, next)
 
-			steps = append(steps, m.String())
+			m.Steps = append(m.Steps, m.String())
 		}
 	}
 
-	log.Println("len(steps): ", len(steps))
-	return steps
+	log.Println("len(m.Steps): ", len(m.Steps))
 }
 
 func getUnvisitedNeighbours(curr MazeCoords, maze *Maze) []MazeCoords {

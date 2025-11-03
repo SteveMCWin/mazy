@@ -5,9 +5,9 @@ import (
 	"maze_gen/maze"
 	"os/exec"
 	"strconv"
+	"time"
 
 	tea "github.com/charmbracelet/bubbletea"
-	// "github.com/charmbracelet/lipgloss"
 )
 
 type SupportedTerminals int
@@ -18,6 +18,8 @@ const (
 	Konsole
 	Other
 )
+
+type Animate bool
 
 type Model struct {
 	windowWidth  int
@@ -68,6 +70,15 @@ func ChangeFontSize(term SupportedTerminals, amount int, pos bool) tea.Cmd {
 	})
 }
 
+func genNewMaze(m *Model) {
+	m.maze_dims.X = (m.windowWidth-windowStyle.GetHorizontalFrameSize())/2 - 2
+	m.maze_dims.Y = m.windowHeight - windowStyle.GetVerticalFrameSize()
+	m.maze.InitMazeBase(m.maze_dims.X, m.maze_dims.Y)
+	log.Println("width, height:", m.maze_dims.X, m.maze_dims.Y)
+	m.maze.MakeMazeRDFS()
+	m.maze.MakeMazeStartEnd()
+}
+
 func (m Model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 	cmds := make([]tea.Cmd, 0)
 	switch msg := msg.(type) {
@@ -85,13 +96,9 @@ func (m Model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 			// if !m.isTyping {
 			// 	m.currTab = TabIndex((len(m.tabs) + int(m.currTab) - 1) % len(m.tabs))
 			// }
-		case "ctrl+r":
-			m.maze_dims.X = (m.windowWidth-windowStyle.GetHorizontalFrameSize())/2 - 2
-			m.maze_dims.Y = m.windowHeight-windowStyle.GetVerticalFrameSize()
-			m.maze.InitMazeBase(m.maze_dims.X, m.maze_dims.Y)
-			log.Println("width, height:", m.maze_dims.X, m.maze_dims.Y)
-			m.gen_steps = m.maze.MakeMazeRDFS()
-			m.maze.MakeMazeStartEnd()
+		case "ctrl+r": // THERE IS A BUG when the program starts a new maze is made, but then another is made when pressing ctrl+r and then they both get displayed, but after that no new ones are made
+			genNewMaze(&m)
+			cmds = append(cmds, AnimateSignal(m))
 		case "ctrl+up":
 			// cmds = append(cmds, ChangeFontSize(&m.terminal, 1, true))
 		case "ctrl+down":
@@ -112,26 +119,27 @@ func (m Model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 			// 	HandleTyping(&m, msg.String())
 			// }
 		}
-	// case HttpStatus:
-	// 	if int(msg) == http.StatusOK {
-	// 		m.isOnline = true
-	// 	}
-	// case HttpError:
-	// 	log.Println("ERROR:", msg)
 	case tea.WindowSizeMsg:
 		m.windowWidth = msg.Width
 		m.windowHeight = msg.Height
-		// case mod.Quote:
-		// 	m.cursorCol = 5
-		// 	m.cursorRow = 20
-		// 	m.quoteLoaded = true
-		// 	m.quote = msg
-		// 	m.splitQuote = strings.Split(m.quote.Quote, " ")
-		// 	m.typedLen = len(m.splitQuote[m.wordsTyped])
-		// 	m.tabs[Home].Contents = m.quote.Quote
-		// case SupportedTerminals:
-		// 	m.terminal = msg
+		genNewMaze(&m)
+	case Animate:
+		if bool(msg) == true {
+			if m.maze.CurrFrame < len(m.maze.Steps)-1 {
+				m.maze.CurrFrame += 1
+				cmds = append(cmds, AnimateSignal(m))
+			} else {
+				m.maze.AnimationPaused = true
+			}
+		}
 	}
 
 	return m, tea.Batch(cmds...)
+}
+
+func AnimateSignal(m Model) func()tea.Msg {
+	return func() tea.Msg {
+		time.Sleep(10 * time.Millisecond)
+		return Animate(!m.maze.AnimationPaused)
+	}
 }
