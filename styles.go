@@ -83,8 +83,9 @@ var (
 	activeTabStyle    = inactiveTabStyle.Border(activeTabBorder, true)
 	tabGapLeft        = inactiveTabStyle.Border(tabGapBorderLeft, true)
 	tabGapRight       = inactiveTabStyle.Border(tabGapBorderRight, true)
-	windowStyle       = lipgloss.NewStyle().Padding(2, 2).Margin(4, 4).Align(lipgloss.Center).Border(lipgloss.RoundedBorder())
+	windowStyle       = lipgloss.NewStyle().Padding(2, 2).Margin(4, 4).Align(lipgloss.Center).Border(lipgloss.NormalBorder())
 	wallStyle         = lipgloss.NewStyle().Foreground(DefaultTheme.Secondary)
+	// playerStyle       = lipgloss.NewStyle().Foreground(DefaultTheme.Accent)
 )
 
 func SetCurrentTheme(t ColorTheme) func() tea.Msg {

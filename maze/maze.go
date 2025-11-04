@@ -2,14 +2,27 @@ package maze
 
 import (
 	"fmt"
-	"log"
+	"strconv"
+	// "log"
 	"math/rand"
 	"strings"
 )
 
-const wall = rune('█')
-const empty = rune(' ')
+// const wall = rune('▓')
+// const empty = rune(' ')
 const double_width_maze = true
+
+type TileType rune
+
+const (
+	Empty TileType = ' '
+	Wall  TileType = '▓'
+	Player TileType = '░'
+)
+
+func (tt TileType) String() string {
+	return strconv.QuoteRune(rune(tt))
+}
 
 type MazeCoords struct {
 	X int
@@ -17,25 +30,28 @@ type MazeCoords struct {
 }
 
 type Cell struct {
-	Sprite  rune
+	Tile    TileType
 	Visited bool
 }
 
 type Maze struct {
-	Cells [][]Cell
-	Steps []string
-	CurrFrame int
+	Cells           [][]Cell
+	Steps           []string
+	CurrFrame       int
 	AnimationPaused bool
+	StartPos        MazeCoords
+	EndPos          MazeCoords
+	PlayerPos       MazeCoords
 }
 
 func (m *Maze) InitMazeBase(x, y int) {
 
 	// make sure the dimensions are odd and don't overflow
-	if x > 1 && x % 2 == 0 {
+	if x > 1 && x%2 == 0 {
 		x -= 1
 	}
 
-	if y > 1 && y % 2 == 0 {
+	if y > 1 && y%2 == 0 {
 		y -= 1
 	}
 
@@ -46,9 +62,9 @@ func (m *Maze) InitMazeBase(x, y int) {
 
 		for j := range x {
 			if i%2 == 0 || j%2 == 0 {
-				m.Cells[i][j].Sprite = wall
+				m.Cells[i][j].Tile = Wall
 			} else {
-				m.Cells[i][j].Sprite = empty
+				m.Cells[i][j].Tile = Empty
 			}
 		}
 	}
@@ -66,8 +82,13 @@ func (m *Maze) MakeMazeStartEnd(coords ...MazeCoords) {
 		finish = MazeCoords{X: len(m.Cells[0]) - 2, Y: len(m.Cells) - 1}
 	}
 
-	m.Cells[begin.Y][begin.X].Sprite = empty
-	m.Cells[finish.Y][finish.X].Sprite = empty
+	m.Cells[begin.Y][begin.X].Tile = Player
+	m.Cells[finish.Y][finish.X].Tile = Empty
+
+	m.StartPos = begin
+	m.EndPos = finish
+
+	m.MovePlayerTo(m.StartPos)
 
 	m.Steps = append(m.Steps, m.String())
 }
@@ -98,7 +119,7 @@ func (m *Maze) MakeMazeRDFS() {
 			stack = append(stack, curr)
 			next := unvisitedNeighbours[rand.Int()%len(unvisitedNeighbours)]
 			wallCoords := MazeCoords{X: (curr.X + next.X) / 2, Y: (curr.Y + next.Y) / 2}
-			m.Cells[wallCoords.Y][wallCoords.X].Sprite = empty
+			m.Cells[wallCoords.Y][wallCoords.X].Tile = Empty
 			m.Cells[next.Y][next.X].Visited = true
 			stack = append(stack, next)
 
@@ -106,7 +127,6 @@ func (m *Maze) MakeMazeRDFS() {
 		}
 	}
 
-	log.Println("len(m.Steps): ", len(m.Steps))
 }
 
 func getUnvisitedNeighbours(curr MazeCoords, maze *Maze) []MazeCoords {
@@ -134,12 +154,12 @@ func (m *Maze) String() string {
 
 	if double_width_maze {
 		write = func(i, j int) {
-			b.WriteRune(m.Cells[i][j].Sprite)
-			b.WriteRune(m.Cells[i][j].Sprite) // write the same sprite again for double width
+			b.WriteRune(rune(m.Cells[i][j].Tile))
+			b.WriteRune(rune(m.Cells[i][j].Tile)) // write the same sprite again for double width
 		}
 	} else {
 		write = func(i, j int) {
-			b.WriteRune(m.Cells[i][j].Sprite)
+			b.WriteRune(rune(m.Cells[i][j].Tile))
 		}
 	}
 
@@ -151,4 +171,50 @@ func (m *Maze) String() string {
 	}
 
 	return b.String()
+}
+
+func (m *Maze) GetTileType(coords MazeCoords) TileType {
+	return m.Cells[coords.Y][coords.X].Tile
+}
+
+func (m *Maze) CanPlayerMoveTo(coords MazeCoords) bool {
+	isInBounds := (coords.X >= 0 && coords.X < len(m.Cells[0])) && (coords.Y >= 0 && coords.Y < len(m.Cells))
+	if !isInBounds {
+		panic("AAAAA")
+	}
+	isEmptyTile := m.GetTileType(coords) == Empty
+	mazeFinishedAnimating := m.CurrFrame == len(m.Steps)-1
+	return isEmptyTile && isInBounds && mazeFinishedAnimating
+}
+
+func AddCoords(c1, c2 MazeCoords) MazeCoords {
+	return MazeCoords{X: c1.X + c2.X, Y: c1.Y + c2.Y}
+}
+
+func (m *Maze) MovePlayerTo(coords MazeCoords) {
+	if !m.CanPlayerMoveTo(coords) {
+		return
+	}
+
+	m.Cells[m.PlayerPos.Y][m.PlayerPos.X].Tile = Empty
+
+	m.PlayerPos = coords
+
+	m.Cells[coords.Y][coords.X].Tile = Player
+}
+
+func (m *Maze) MovePlayerBy(coords MazeCoords) {
+	if !m.CanPlayerMoveTo(coords) {
+		return
+	}
+
+	m.Cells[m.PlayerPos.Y][m.PlayerPos.X].Tile = Empty
+
+	m.PlayerPos = AddCoords(m.PlayerPos, coords)
+
+	m.Cells[coords.Y][coords.X].Tile = Player
+}
+
+func (m *Maze) UpdateLastFrame() {
+	m.Steps[len(m.Steps)-1] = m.String()
 }

@@ -1,52 +1,27 @@
-debug 2025/11/03 16:49:21 
-debug 2025/11/03 16:49:21 ~~~~~~~~~PROGRAM START~~~~~~~~~
-debug 2025/11/03 16:49:21 
-debug 2025/11/03 16:49:21 width, height: 97 37
-debug 2025/11/03 16:49:21 len(m.Steps):  864
-debug 2025/11/03 16:49:22 width, height: 97 37
-debug 2025/11/03 16:49:22 len(m.Steps):  1729
-debug 2025/11/03 16:49:42 
-debug 2025/11/03 16:49:42 ~~~~~~~~~PROGRAM START~~~~~~~~~
-debug 2025/11/03 16:49:42 
-debug 2025/11/03 16:49:42 width, height: 48 14
-debug 2025/11/03 16:49:42 len(m.Steps):  138
-debug 2025/11/03 16:49:57 width, height: 97 37
-debug 2025/11/03 16:49:57 len(m.Steps):  1003
-debug 2025/11/03 16:50:00 width, height: 97 37
-debug 2025/11/03 16:50:00 len(m.Steps):  1868
-debug 2025/11/03 16:56:12 
-debug 2025/11/03 16:56:12 ~~~~~~~~~PROGRAM START~~~~~~~~~
-debug 2025/11/03 16:56:12 
-debug 2025/11/03 16:56:12 width, height: 97 37
-debug 2025/11/03 16:56:12 len(m.Steps):  864
-debug 2025/11/03 16:56:25 width, height: 97 37
-debug 2025/11/03 16:56:25 len(m.Steps):  1729
-debug 2025/11/03 16:56:34 width, height: 97 37
-debug 2025/11/03 16:56:34 len(m.Steps):  2594
-debug 2025/11/03 16:57:05 
-debug 2025/11/03 16:57:05 ~~~~~~~~~PROGRAM START~~~~~~~~~
-debug 2025/11/03 16:57:05 
-debug 2025/11/03 16:57:05 width, height: 97 37
-debug 2025/11/03 16:57:05 len(m.Steps):  864
-debug 2025/11/03 16:57:11 width, height: 97 37
-debug 2025/11/03 16:57:11 len(m.Steps):  1729
-debug 2025/11/03 16:59:10 
-debug 2025/11/03 16:59:10 ~~~~~~~~~PROGRAM START~~~~~~~~~
-debug 2025/11/03 16:59:10 
-debug 2025/11/03 16:59:10 width, height: 97 37
-debug 2025/11/03 16:59:10 len(m.Steps):  864
-debug 2025/11/03 16:59:14 width, height: 97 37
-debug 2025/11/03 16:59:14 len(m.Steps):  864
-debug 2025/11/03 16:59:45 
-debug 2025/11/03 16:59:45 ~~~~~~~~~PROGRAM START~~~~~~~~~
-debug 2025/11/03 16:59:45 
-debug 2025/11/03 16:59:45 width, height: 97 37
-debug 2025/11/03 16:59:45 len(m.Steps):  864
-debug 2025/11/03 16:59:49 width, height: 97 37
-debug 2025/11/03 16:59:49 len(m.Steps):  864
-debug 2025/11/03 17:00:01 width, height: 97 37
-debug 2025/11/03 17:00:01 len(m.Steps):  864
-debug 2025/11/03 17:00:02 width, height: 97 37
-debug 2025/11/03 17:00:02 len(m.Steps):  864
-debug 2025/11/03 17:00:03 width, height: 97 37
-debug 2025/11/03 17:00:04 len(m.Steps):  864
+debug 2025/11/04 13:51:43 
+debug 2025/11/04 13:51:43 ~~~~~~~~~PROGRAM START~~~~~~~~~
+debug 2025/11/04 13:51:43 
+debug 2025/11/04 13:51:43 width, height: 97 37
+debug 2025/11/04 13:51:46 Adding {0, 0} and {0, 1}
+debug 2025/11/04 13:51:46 New pos: {0, 1}
+debug 2025/11/04 13:51:46 Adding {0, 0} and {0, 1}
+debug 2025/11/04 13:51:46 New pos: {0, 1}
+debug 2025/11/04 13:51:47 Adding {0, 0} and {0, 1}
+debug 2025/11/04 13:51:47 New pos: {0, 1}
+debug 2025/11/04 13:51:47 Adding {0, 0} and {0, 1}
+debug 2025/11/04 13:51:47 New pos: {0, 1}
+debug 2025/11/04 13:51:47 Adding {0, 0} and {0, 1}
+debug 2025/11/04 13:51:47 New pos: {0, 1}
+debug 2025/11/04 13:51:47 Adding {0, 0} and {0, 1}
+debug 2025/11/04 13:51:47 New pos: {0, 1}
+debug 2025/11/04 13:51:47 Adding {0, 0} and {0, 1}
+debug 2025/11/04 13:51:47 New pos: {0, 1}
+debug 2025/11/04 13:51:48 Adding {0, 0} and {1, 0}
+debug 2025/11/04 13:51:48 New pos: {1, 0}
+debug 2025/11/04 13:51:48 Adding {0, 0} and {1, 0}
+debug 2025/11/04 13:51:48 New pos: {1, 0}
+debug 2025/11/04 13:51:48 Adding {0, 0} and {1, 0}
+debug 2025/11/04 13:51:48 New pos: {1, 0}
+debug 2025/11/04 13:51:48 Adding {0, 0} and {-1, 0}
+debug 2025/11/04 13:51:48 New pos: {-1, 0}
+debug 2025/11/04 13:51:48 Unable to run tui:program was killed: program experienced a panic

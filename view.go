@@ -4,6 +4,7 @@ import (
 	"log"
 	// "os"
 	"strings"
+	"maze_gen/maze"
 
 	// "github.com/charmbracelet/lipgloss"
 )
@@ -16,7 +17,13 @@ func (m Model) View() string {
 	if len(m.maze.Steps) <= m.maze.CurrFrame {
 		contents = ""
 	} else {
-		contents = wallStyle.Render(m.maze.Steps[m.maze.CurrFrame])
+		mazeStr := m.maze.Steps[m.maze.CurrFrame]
+
+		if !m.showPlayer {
+			mazeStr = strings.ReplaceAll(mazeStr, maze.Player.String(), maze.Empty.String())
+		}
+
+		contents = wallStyle.Render(mazeStr)
 	}
 
 	_, err := doc.WriteString(windowStyle.Width(m.windowWidth-windowStyle.GetHorizontalFrameSize()).Height(m.windowHeight-windowStyle.GetVerticalFrameSize()).Render(contents))
