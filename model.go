@@ -101,37 +101,37 @@ func (m Model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 			m.maze.AnimationPaused = !m.maze.AnimationPaused
 			cmds = append(cmds, AnimateSignal(m))
 		case "h", "left":
+			log.Printf("Pressed %s\n", msg.String())
 			log.Printf("Adding {%d, %d} and {%d, %d}\n", m.maze.PlayerPos.X, m.maze.PlayerPos.Y, -1, 0)
 			newPos := maze.AddCoords(m.maze.PlayerPos, maze.MazeCoords{X:-1, Y: 0})
 			log.Printf("New pos: {%d, %d}", newPos.X, newPos.Y)
 
-			if m.maze.CanPlayerMoveTo(newPos) {
-				m.maze.MovePlayerTo(newPos)
-			}
+			m.maze.MovePlayerTo(newPos)
+			// log.Printf("New player pos: {%d, %d}", m.maze.PlayerPos.X, m.maze.PlayerPos.Y)
 			m.maze.UpdateLastFrame()
 		case "j", "down":
+			log.Printf("Pressed %s\n", msg.String())
 			log.Printf("Adding {%d, %d} and {%d, %d}\n", m.maze.PlayerPos.X, m.maze.PlayerPos.Y, 0, 1)
 			newPos := maze.AddCoords(m.maze.PlayerPos, maze.MazeCoords{X: 0, Y: 1})
 			log.Printf("New pos: {%d, %d}", newPos.X, newPos.Y)
-			if m.maze.CanPlayerMoveTo(newPos) {
-				m.maze.MovePlayerTo(newPos)
-			}
+			m.maze.MovePlayerTo(newPos)
+			// log.Printf("New player pos: {%d, %d}", m.maze.PlayerPos.X, m.maze.PlayerPos.Y)
 			m.maze.UpdateLastFrame()
 		case "k", "up":
+			log.Printf("Pressed %s\n", msg.String())
 			log.Printf("Adding {%d, %d} and {%d, %d}\n", m.maze.PlayerPos.X, m.maze.PlayerPos.Y, 0, -1)
 			newPos := maze.AddCoords(m.maze.PlayerPos, maze.MazeCoords{X: 0, Y:-1})
 			log.Printf("New pos: {%d, %d}", newPos.X, newPos.Y)
-			if m.maze.CanPlayerMoveTo(newPos) {
-				m.maze.MovePlayerTo(newPos)
-			}
+			m.maze.MovePlayerTo(newPos)
+			// log.Printf("New player pos: {%d, %d}", m.maze.PlayerPos.X, m.maze.PlayerPos.Y)
 			m.maze.UpdateLastFrame()
 		case "l", "right":
+			log.Printf("Pressed %s\n", msg.String())
 			log.Printf("Adding {%d, %d} and {%d, %d}\n", m.maze.PlayerPos.X, m.maze.PlayerPos.Y, 1, 0)
 			newPos := maze.AddCoords(m.maze.PlayerPos, maze.MazeCoords{X: 1, Y: 0})
 			log.Printf("New pos: {%d, %d}", newPos.X, newPos.Y)
-			if m.maze.CanPlayerMoveTo(newPos) {
-				m.maze.MovePlayerTo(newPos)
-			}
+			m.maze.MovePlayerTo(newPos)
+			// log.Printf("New player pos: {%d, %d}", m.maze.PlayerPos.X, m.maze.PlayerPos.Y)
 			m.maze.UpdateLastFrame()
 		case "ctrl+up":
 			// cmds = append(cmds, ChangeFontSize(&m.terminal, 1, true))

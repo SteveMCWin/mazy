@@ -2,7 +2,9 @@ package maze
 
 import (
 	"fmt"
+	"log"
 	"strconv"
+
 	// "log"
 	"math/rand"
 	"strings"
@@ -88,7 +90,8 @@ func (m *Maze) MakeMazeStartEnd(coords ...MazeCoords) {
 	m.StartPos = begin
 	m.EndPos = finish
 
-	m.MovePlayerTo(m.StartPos)
+	// m.MovePlayerTo(m.StartPos)
+	m.PlayerPos = m.StartPos
 
 	m.Steps = append(m.Steps, m.String())
 }
@@ -184,6 +187,17 @@ func (m *Maze) CanPlayerMoveTo(coords MazeCoords) bool {
 	}
 	isEmptyTile := m.GetTileType(coords) == Empty
 	mazeFinishedAnimating := m.CurrFrame == len(m.Steps)-1
+
+	if !isEmptyTile {
+		log.Println("TILE NOT EMPTY")
+	}
+	if !isInBounds {
+		log.Println("NOT IN BOUNDS")
+	}
+	if !mazeFinishedAnimating {
+		log.Println("MAZE STILL ANIMATING")
+	}
+
 	return isEmptyTile && isInBounds && mazeFinishedAnimating
 }
 
@@ -193,12 +207,17 @@ func AddCoords(c1, c2 MazeCoords) MazeCoords {
 
 func (m *Maze) MovePlayerTo(coords MazeCoords) {
 	if !m.CanPlayerMoveTo(coords) {
+		log.Println("CANNOT MOVE PLAYER THERE")
 		return
 	}
+
+	log.Printf("Passed coords: {%d, %d}\n", coords.X, coords.Y)
+	log.Printf("Clearing position {%d, %d}", m.PlayerPos.X, m.PlayerPos.Y)
 
 	m.Cells[m.PlayerPos.Y][m.PlayerPos.X].Tile = Empty
 
 	m.PlayerPos = coords
+	log.Printf("New player pos: {%d, %d}", m.PlayerPos.X, m.PlayerPos.Y)
 
 	m.Cells[coords.Y][coords.X].Tile = Player
 }
