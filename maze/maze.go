@@ -183,7 +183,7 @@ func (m *Maze) GetTileType(coords MazeCoords) TileType {
 func (m *Maze) CanPlayerMoveTo(coords MazeCoords) bool {
 	isInBounds := (coords.X >= 0 && coords.X < len(m.Cells[0])) && (coords.Y >= 0 && coords.Y < len(m.Cells))
 	if !isInBounds {
-		panic("AAAAA")
+		return false
 	}
 	isEmptyTile := m.GetTileType(coords) == Empty
 	mazeFinishedAnimating := m.CurrFrame == len(m.Steps)-1
@@ -198,7 +198,7 @@ func (m *Maze) CanPlayerMoveTo(coords MazeCoords) bool {
 		log.Println("MAZE STILL ANIMATING")
 	}
 
-	return isEmptyTile && isInBounds && mazeFinishedAnimating
+	return isEmptyTile && mazeFinishedAnimating
 }
 
 func AddCoords(c1, c2 MazeCoords) MazeCoords {
